@@ -8,6 +8,7 @@ namespace StudyBudAPI.Models
 		public string Description { get; set; }
 		public DateTime Created { get; set; }
 		public string TopicName { get; set; }
+		public TopicDto Topic { get; set; }
 		//public List<Message> Messages { get; set; }
 	}
 }

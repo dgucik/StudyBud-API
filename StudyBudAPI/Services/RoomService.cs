@@ -10,7 +10,7 @@ namespace StudyBudAPI.Services
 		int CreateRoom(CreateRoomDto dto);
 		void DeleteRoom(int roomId);
 		RoomDto GetRoomById(int roomId);
-		IEnumerable<RoomDto> GetRooms();
+		PaginatedResult<RoomDto> GetRooms(StudyBudQuery query);
 	}
 
 	public class RoomService : IRoomService
@@ -24,15 +24,25 @@ namespace StudyBudAPI.Services
 			_mapper = mapper;
 		}
 
-		public IEnumerable<RoomDto> GetRooms()
+		public PaginatedResult<RoomDto> GetRooms(StudyBudQuery query)
 		{
-			var rooms = _dbContext.Rooms
+			var baseQuery = _dbContext.Rooms
+				.Include(x => x.Topic)
 				.Include(x => x.Messages)
+				.Where(r => (query.SearchPhrase == null) || (r.Name.ToLower().Contains(query.SearchPhrase))
+					|| (r.Description.ToLower().Contains(query.SearchPhrase)));
+				
+			
+			var rooms = baseQuery.Skip(query.PageSize * (query.PageNumber - 1))
+				.Take(query.PageSize)
 				.ToList();
 
 			var roomsDtos = _mapper.Map<List<RoomDto>>(rooms);
+			var totalCount = baseQuery.Count();
 
-			return roomsDtos;
+			var result = new PaginatedResult<RoomDto>(roomsDtos, totalCount, query.PageSize, query.PageNumber);
+
+			return result;
 		}
 
 		public RoomDto GetRoomById(int roomId)

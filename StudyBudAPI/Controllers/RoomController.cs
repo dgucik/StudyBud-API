@@ -16,28 +16,28 @@ namespace StudyBudAPI.Controllers
         }
 
 		[HttpGet]
-		public ActionResult<IEnumerable<RoomDto>> GetRooms()
+		public ActionResult<PaginatedResult<RoomDto>> GetRooms([FromQuery] StudyBudQuery query)
 		{
-			var rooms = _service.GetRooms();
+			var rooms = _service.GetRooms(query);
 			return Ok(rooms);
 		}
 
 		[HttpGet("{roomId}")]
-		public ActionResult<RoomDto> GetRoomById(int roomId)
+		public ActionResult<RoomDto> GetRoomById([FromQuery] int roomId)
 		{
 			var room = _service.GetRoomById(roomId);
 			return Ok(room);
 		}
 
 		[HttpPost]
-		public ActionResult CreateRoom(CreateRoomDto dto)
+		public ActionResult CreateRoom([FromBody] CreateRoomDto dto)
 		{
 			var roomId = _service.CreateRoom(dto);
 			return Created($"api/room/{roomId}", null);
 		}
 
 		[HttpDelete("{roomId}")]
-		public ActionResult DeleteRoom(int roomId)
+		public ActionResult DeleteRoom([FromQuery] int roomId)
 		{
 			_service.DeleteRoom(roomId);
 			return NoContent();

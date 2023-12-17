@@ -20,6 +20,7 @@ builder.Services.AddDbContext<StudyBudDbContext>
 	(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudyBudConnection")));
 builder.Services.AddScoped<StudyBudSeeder>();
 builder.Services.AddScoped<IValidator<CreateTopicDto>, CreateTopicDtoValidator>();
+builder.Services.AddScoped<IValidator<StudyBudQuery>, StudyBudQueryValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
