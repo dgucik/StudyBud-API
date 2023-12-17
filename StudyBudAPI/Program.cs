@@ -22,6 +22,7 @@ builder.Services.AddScoped<StudyBudSeeder>();
 builder.Services.AddScoped<IValidator<CreateTopicDto>, CreateTopicDtoValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ITopicService, TopicService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 var app = builder.Build();
 
