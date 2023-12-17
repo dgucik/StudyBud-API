@@ -1,18 +1,27 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using StudyBudAPI;
 using StudyBudAPI.Entities;
+using StudyBudAPI.Models;
+using StudyBudAPI.Models.Validator;
+using StudyBudAPI.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StudyBudDbContext>
 	(options => options.UseSqlServer(builder.Configuration.GetConnectionString("StudyBudConnection")));
 builder.Services.AddScoped<StudyBudSeeder>();
+builder.Services.AddScoped<IValidator<CreateTopicDto>, CreateTopicDtoValidator>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<ITopicService, TopicService>();
 
 var app = builder.Build();
 
@@ -26,7 +35,6 @@ if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-
 }
 
 app.UseHttpsRedirection();
